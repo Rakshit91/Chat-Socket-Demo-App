@@ -60,5 +60,17 @@
                 android:maxLines="1"
                 android:ellipsize="end"/>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/messageCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textSize="10dp"
+            android:background="@drawable/bg_black_round"
+            android:padding="6dp"
+            android:textColor="@color/white"
+            android:layout_gravity="center_vertical" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -44,6 +44,9 @@ class ChatListFragment : Fragment(R.layout.fragment_chat_list) {
             findNavController().navigate(action)
         }
 
+        ChatDatabase.currentScreen = this::class.java.name
+        ChatDatabase.currentOpenedUser = null
+
         viewModel.currentUser.observe(viewLifecycleOwner){
             binding.textView2.text = "Current user $it"
         }

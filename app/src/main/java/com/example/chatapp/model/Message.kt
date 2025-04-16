@@ -5,6 +5,7 @@ data class Message(
     val senderId: String, // ID of the sender
     val receiverId:String,
     val timestamp: String,
-    var sent:Boolean
+    var sent:Boolean,
+    var read:Boolean
 )
 

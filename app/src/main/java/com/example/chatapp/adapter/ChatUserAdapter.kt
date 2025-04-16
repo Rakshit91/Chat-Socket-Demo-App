@@ -1,5 +1,6 @@
 package com.example.chatapp.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,17 +29,32 @@ class ChatUserAdapter(
         private val userName = view.findViewById<TextView>(R.id.textUserName)
         private val lastMessage = view.findViewById<TextView>(R.id.textLastMessage)
         private val avatar = view.findViewById<TextView>(R.id.avatar)
+        private val messageCounter = view.findViewById<TextView>(R.id.messageCounter)
 
         fun bind(user: ChatUser) {
             avatar.text = user.name.first().toString()
             userName.text = user.name
 
             if(user.chatList.isEmpty()){
-                lastMessage.text = user.lastMessage
+                lastMessage.text = ""
+                messageCounter.visibility = View.GONE
             }else{
                 lastMessage.text = user.chatList[user.chatList.size -1].text
+                if(user.chatList[user.chatList.size-1].read){
+                    lastMessage.setTextColor(Color.GRAY)
+                    messageCounter.visibility = View.GONE
+                }else{
+                    var counter = 0
+                    for(i in user.chatList){
+                        if(!i.read){
+                            counter++
+                        }
+                    }
+                    messageCounter.visibility = View.VISIBLE
+                    messageCounter.text = "$counter"
+                    lastMessage.setTextColor(Color.BLACK)
+                }
             }
-
 
             itemView.setOnClickListener { onClick(user.name) }
         }

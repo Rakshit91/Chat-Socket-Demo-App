@@ -53,11 +53,17 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         userId = arguments?.getString("userId")
         index = ChatDatabase.currentChatList.indexOfFirst { user -> userId == user.name }
         startObservers()
-
+        for(i in ChatDatabase.currentChatList[index].chatList.indices){
+            ChatDatabase.currentChatList[index].chatList[i].read = true
+        }
+        viewModel.updateDatabase()
         chatAdapter = ChatAdapter(viewModel.currentUser.value ?: "")
         binding.messageRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
         binding.messageRecyclerView.adapter = chatAdapter
         chatAdapter.submitList(ChatDatabase.currentChatList[index].chatList)
+
+        binding.noChat.visibility = if(ChatDatabase.currentChatList[index].chatList.isEmpty()) View.VISIBLE else View.GONE
+        binding.messageRecyclerView.visibility = if(ChatDatabase.currentChatList[index].chatList.isEmpty()) View.GONE else View.VISIBLE
 
         // Handle send button click
         binding.sendButton.setOnClickListener {
@@ -66,7 +72,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 viewModel.webSocket?.send(messageText)
                 userId?.let {
                     viewModel.sendMessage(it, messageText)
-                    val currentMessage = Message(messageText, viewModel.currentUser.value ?: "", userId?:"","", false)
+                    val currentMessage = Message(messageText, viewModel.currentUser.value ?: "", userId?:"","", false, true)
                     ChatDatabase.currentChatList[index].chatList.add(currentMessage)
                     viewModel.updateDatabase()
 
@@ -79,6 +85,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     chatAdapter.submitList(ChatDatabase.currentChatList[index].chatList)
                     binding.messageRecyclerView.scrollToPosition(ChatDatabase.currentChatList[index].chatList.size - 1)  // Scroll to the latest message
                     binding.editMessage.text.clear()  // Clear input after sending
+                    binding.noChat.visibility = if(ChatDatabase.currentChatList[index].chatList.isEmpty()) View.VISIBLE else View.GONE
+                    binding.messageRecyclerView.visibility = if(ChatDatabase.currentChatList[index].chatList.isEmpty()) View.GONE else View.VISIBLE
                 }
             }
         }
@@ -108,6 +116,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 binding.connectionStatus.text = "Connection Status: Not Connected"
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ChatDatabase.currentScreen = ChatFragment::class.java.name
+        ChatDatabase.currentOpenedUser = userId
     }
 
 }

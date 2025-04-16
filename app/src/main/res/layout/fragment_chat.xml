@@ -51,8 +51,20 @@
         android:layout_below="@+id/avatar_layout" />
 
     <!-- RecyclerView for messages -->
+    <TextView
+        android:id="@+id/no_chat"
+        android:visibility="gone"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No Chat Yet!"
+        android:layout_below="@+id/connectionStatus"
+        android:layout_above="@+id/messageInputContainer"/>
+
+    <!-- RecyclerView for messages -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messageRecyclerView"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/connectionStatus"
